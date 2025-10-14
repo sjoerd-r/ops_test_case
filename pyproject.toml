@@ -5,7 +5,6 @@ description = ""
 authors = [
     {name = "Paddy",email = "paddy.natte@upfront.nl"}
 ]
-packages = [{ include = "ops" }]
 
 requires-python = ">=3.11,<4.0"
 dependencies = [
@@ -33,6 +32,11 @@ dependencies = [
 [build-system]
 requires = ["setuptools>=68.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["ops*"]
+namespaces = true
 
 [tool.ruff]
 line-length = 79
