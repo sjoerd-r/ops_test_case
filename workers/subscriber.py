@@ -9,8 +9,8 @@ from google.pubsub_v1.services.subscriber.async_client import (
 )
 from google.cloud.pubsub_v1.subscriber.message import Message
 
-from core_wms.app.tasks.registry import MAP
-from core_wms.app.tasks.broker import dramatiq_broker
+from ops.app.tasks.registry import MAP
+from ops.app.tasks.broker import dramatiq_broker
 
 logger = logging.getLogger(__name__)
 

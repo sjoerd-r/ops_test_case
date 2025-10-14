@@ -1,11 +1,11 @@
 [project]
-name = "core_wms"
+name = "ops"
 version = "0.1.0"
 description = ""
 authors = [
     {name = "Paddy",email = "paddy.natte@upfront.nl"}
 ]
-packages = [{ include = "core_wms" }]
+packages = [{ include = "ops" }]
 
 requires-python = ">=3.11,<4.0"
 dependencies = [

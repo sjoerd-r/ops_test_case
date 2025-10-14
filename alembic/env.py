@@ -7,7 +7,7 @@ from alembic import context
 
 from sqlmodel import SQLModel
 
-from core_wms.app.sqlalchemy.models import *
+from ops.app.sqlalchemy.models import *
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

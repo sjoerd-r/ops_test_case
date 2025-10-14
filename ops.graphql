@@ -1,0 +1,282 @@
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
+scalar _Any
+"Date with time (isoformat)"
+scalar DateTime
+"Date (isoformat)"
+scalar Date
+type Query {
+  _entities(representations: [_Any!]!): [_Entity]!
+  _service: _Service!
+  aisles: [Aisle!]!
+  aisle(id: Int!): Aisle
+  bins: [Bin!]!
+  bin(id: Int!): Bin
+  pallets: [Pallet!]!
+  pallet(code: String!): Pallet
+  racks: [Rack!]!
+  rack(id: Int!): Rack
+  warehouses: [Warehouse!]!
+  warehouse(id: Int!): Warehouse
+  zones: [Zone!]!
+  zone(id: Int!): Zone
+}
+type Aisle {
+  id: ID!
+  zoneId: Int
+  name: String
+  description: String
+  type: String
+  active: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+  racks: Rack
+  zone: Zone
+}
+type Rack {
+  id: ID!
+  aisleId: Int
+  position: Int
+  description: String
+  type: String
+  active: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+  bins: [Bin!]!
+  aisle: Aisle
+}
+type Bin {
+  id: ID!
+  rackId: Int
+  level: String
+  prefix: String
+  accessible: Boolean
+  status: String
+  type: String
+  notes: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  positions: [BinPosition!]!
+  rack: Rack
+}
+type BinPosition {
+  id: ID!
+  binId: Int
+  position: String
+  location: String
+  status: String
+  isAvailable: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+  bin: Bin
+  pallets: [Pallet!]!
+}
+type Pallet {
+  id: ID!
+  code: String
+  binPositionId: Int
+  batchId: Int
+  productVariantId: Int
+  purchaseOrderLineItemId: Int
+  weight: Float
+  status: String
+  type: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  stock: PalletStock
+  binPosition: BinPosition
+}
+type PalletStock {
+  id: ID!
+  palletId: Int
+  productVariantId: Int
+  purchaseOrderLineItemId: Int
+  inbounded: Int
+  forecasted: Int
+  reserved: Int
+  allocated: Int
+  available: Int
+  inventoryItemId: Int
+  locationId: Int
+  received: Date
+  counted: Date
+  moved: Date
+  createdAt: DateTime
+  updatedAt: DateTime
+  pallet: Pallet
+}
+type Zone {
+  id: ID!
+  warehouseId: Int
+  name: String
+  description: String
+  floor: Int
+  type: String
+  active: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+  aisles: Aisle
+  warehouse: Warehouse
+}
+type Warehouse {
+  id: ID!
+  name: String
+  description: String
+  locationId: Int
+  fulfillmentServiceId: Int
+  active: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+  zones: [Zone!]!
+}
+type _Service {
+  sdl: String!
+}
+type Mutation {
+  upsertAisle(
+    "Input data for `upsertAisle` mutation"
+    input: UpsertAisleInput!
+  ): Aisle!
+  deleteAisle(
+    "Input data for `deleteAisle` mutation"
+    input: DeleteAisleInput!
+  ): Boolean!
+  upsertBin(
+    "Input data for `upsertBin` mutation"
+    input: UpsertBinInput!
+  ): Bin!
+  deleteBin(
+    "Input data for `deleteBin` mutation"
+    input: DeleteBinInput!
+  ): Boolean!
+  upsertPallet(
+    "Input data for `upsertPallet` mutation"
+    input: UpsertPalletInput!
+  ): Pallet!
+  deletePallet(
+    "Input data for `deletePallet` mutation"
+    input: DeletePalletInput!
+  ): Boolean!
+  upsertRack(
+    "Input data for `upsertRack` mutation"
+    input: UpsertRackInput!
+  ): Rack!
+  deleteRack(
+    "Input data for `deleteRack` mutation"
+    input: DeleteRackInput!
+  ): Boolean!
+  upsertWarehouse(
+    "Input data for `upsertWarehouse` mutation"
+    input: UpsertWarehouseInput!
+  ): Warehouse!
+  deleteWarehouse(
+    "Input data for `deleteWarehouse` mutation"
+    input: DeleteWarehouseInput!
+  ): Boolean!
+  upsertZone(
+    "Input data for `upsertZone` mutation"
+    input: UpsertZoneInput!
+  ): Zone!
+  deleteZone(
+    "Input data for `deleteZone` mutation"
+    input: DeleteZoneInput!
+  ): Boolean!
+}
+type Subscription {
+  aisleCreated: Aisle!
+  aisleUpdated: Aisle!
+  aisleDeleted: Int!
+  binCreated: Bin!
+  binUpdated: Bin!
+  binDeleted: Int!
+  palletCreated: Pallet!
+  palletUpdated: Pallet!
+  palletDeleted: String!
+  rackCreated: Rack!
+  rackUpdated: Rack!
+  rackDeleted: Int!
+  warehouseCreated: Warehouse!
+  warehouseUpdated: Warehouse!
+  warehouseDeleted: Int!
+  zoneCreated: Zone!
+  zoneUpdated: Zone!
+  zoneDeleted: Int!
+}
+union _Entity = Aisle | Bin | Pallet | Rack | Warehouse | Zone
+input UpsertAisleInput {
+  zoneId: Int!
+  name: String = null
+  description: String = null
+  type: String = "standard"
+  active: Boolean = true
+}
+input DeleteAisleInput {
+  id: Int!
+}
+input UpsertBinInput {
+  rackId: Int!
+  level: String = null
+  prefix: String = null
+  accessible: Boolean = true
+  status: String = "available"
+  type: String = "standard"
+  notes: String = null
+}
+input DeleteBinInput {
+  id: Int!
+}
+input UpsertPalletInput {
+  code: String!
+  binPositionId: Int = null
+  batchId: Int = null
+  productVariantId: Int = null
+  purchaseOrderLineItemId: Int = null
+  weight: Float = null
+  status: String = null
+  type: String = null
+}
+input DeletePalletInput {
+  code: String!
+}
+input UpsertRackInput {
+  aisleId: Int!
+  position: Int!
+  description: String = null
+  type: String = "pallet"
+  active: Boolean = true
+}
+input DeleteRackInput {
+  id: Int!
+}
+input UpsertWarehouseInput {
+  name: String!
+  description: String = null
+  locationId: Int = null
+  fulfillmentServiceId: Int = null
+  active: Boolean = true
+  id: Int = null
+}
+input DeleteWarehouseInput {
+  id: Int!
+}
+input UpsertZoneInput {
+  warehouseId: Int!
+  name: String!
+  description: String = null
+  floor: Int = 1
+  type: String = "storage"
+  active: Boolean = true
+  id: Int = null
+}
+input DeleteZoneInput {
+  id: Int!
+}
+"Exposes a URL that specifies the behavior of this scalar."
+directive @specifiedBy(
+    "The URL that specifies the behavior of this scalar."
+    url: String!
+  ) on SCALAR
+
