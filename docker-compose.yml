@@ -1,0 +1,91 @@
+services:
+  api:
+    build: .
+    command: ["uvicorn", "core_wms.app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    ports:
+      - "8000:8000"
+    depends_on:
+      - rabbitmq
+      - redis
+    volumes:
+      - .:/app
+      - ~/.config/gcloud:/root/.config/gcloud:ro 
+    environment:
+      - database_url=${database_url}
+      - rabbitmq_url=${rabbitmq_url}
+      - project_id=${project_id}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
+
+  worker:
+    build: .
+    command: ["uvicorn", "core_wms.app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    restart: always
+    depends_on:
+      - rabbitmq
+    volumes:
+      - .:/app
+    environment:
+      - database_url=${database_url}
+      - rabbitmq_url=${rabbitmq_url}
+
+  subscriber:
+    build: .
+    command: ["python", "workers/subscriber.py"]
+    restart: always
+    depends_on:
+      - rabbitmq
+    volumes:
+      - .:/app
+      - ~/.config/gcloud:/root/.config/gcloud:ro 
+    environment:
+      - database_url=${database_url}
+      - rabbitmq_url=${rabbitmq_url}
+      - project_id=${project_id}
+      - topic_id=${topic_id}
+      - subscription_id=${subscription_id}
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: always
+
+  apollo-router:
+    image: ghcr.io/apollographql/router:v1.33.0
+    ports:
+      - "4000:4000"
+    environment:
+      - APOLLO_GRAPH_REF=${APOLLO_GRAPH_REF}
+      - APOLLO_KEY=${APOLLO_KEY}
+    volumes:
+      - ./router.yaml:/dist/config/router.yaml
+    command: ["--config", "/dist/config/router.yaml"]
+    depends_on:
+      - api
+    restart: always
+
+  dramatiq_worker:
+    build: .
+    command: ["python", "workers/consumer.py", "--processes", "2", "--threads", "8"]
+    restart: always
+    depends_on:
+      - redis
+    volumes:
+      - .:/app
+    environment:
+      - database_url=${database_url}
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
+
+volumes:
+  redis_data:

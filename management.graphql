@@ -1,0 +1,1596 @@
+type Aisle {
+  id: Int
+  zoneId: Int
+  name: String
+  description: String
+  type: String
+  active: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+  racks: [Rack!]!
+  zone: Zone
+}
+
+type Batch {
+  id: Int
+  warehouseId: Int
+  supplierId: Int
+  productVariantId: Int
+  lot: String
+  manufacturingDate: DateTime
+  expiryDate: DateTime
+  status: String
+  additional: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  warehouse: Warehouse
+  supplier: Supplier
+  productVariant: ProductVariant
+  pallets: [Pallet!]!
+}
+
+type Bin {
+  id: Int
+  rackId: Int
+  level: String
+  prefix: String
+  accessible: Boolean
+  status: String
+  type: String
+  notes: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  positions: [BinPosition!]!
+  rack: Rack
+}
+
+type BinPosition {
+  id: Int
+  binId: Int
+  position: String
+  location: String
+  status: String
+  isAvailable: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+  bin: Bin
+  pallets: [Pallet!]!
+}
+
+type Carrier {
+  id: Int
+  storeId: Int
+  name: String
+  code: String
+  trackingUrlTemplate: String
+  active: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+  store: Store
+}
+
+type Channel {
+  id: Int
+  storeId: Int
+  shopifyChannelId: Int
+  name: String
+  channelType: String
+  handle: String
+  platform: String
+  appId: Int
+  active: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+  store: Store
+}
+
+type Customer {
+  id: Int
+  storeId: Int
+  shopifyCustomerId: Int
+  email: String
+  firstName: String
+  lastName: String
+  phone: String
+  acceptsMarketing: Boolean
+  acceptsMarketingUpdatedAt: DateTime
+  emailMarketingConsent: JSON
+  smsMarketingConsent: JSON
+  marketingOptInLevel: String
+  state: String
+  verifiedEmail: Boolean
+  taxExempt: Boolean
+  tags: String
+  note: String
+  currency: String
+  multipassIdentifier: String
+  ordersCount: Int
+  totalSpent: Decimal
+  lastOrderId: Int
+  lastOrderName: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  addresses: [CustomerAddress!]!
+  orders: [Order!]!
+  store: Store
+}
+
+type CustomerAddress {
+  id: Int
+  customerId: Int
+  shopifyAddressId: Int
+  shopifyCustomerId: Int
+  firstName: String
+  lastName: String
+  company: String
+  address1: String
+  address2: String
+  city: String
+  province: String
+  provinceCode: String
+  country: String
+  countryCode: String
+  zip: String
+  phone: String
+  latitude: Float
+  longitude: Float
+  default: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+  customer: Customer
+}
+
+"""Date (isoformat)"""
+scalar Date
+
+"""Date with time (isoformat)"""
+scalar DateTime
+
+"""Decimal (fixed-point)"""
+scalar Decimal
+
+input DeleteAisleInput {
+  id: Int!
+}
+
+input DeleteBatchInput {
+  id: Int!
+}
+
+input DeleteBinInput {
+  id: Int!
+}
+
+input DeleteBinPositionInput {
+  id: Int!
+}
+
+input DeleteCarrierInput {
+  id: Int!
+}
+
+input DeleteChannelInput {
+  id: Int!
+}
+
+input DeleteCustomerInput {
+  id: Int!
+}
+
+input DeleteFulfillmentLineItemInput {
+  id: Int!
+}
+
+input DeleteFulfillmentOrderInput {
+  id: Int!
+}
+
+input DeleteFulfillmentServiceInput {
+  id: Int!
+}
+
+input DeleteInventoryItemInput {
+  id: Int!
+}
+
+input DeleteInventoryLevelInput {
+  id: Int!
+}
+
+input DeleteLocationInput {
+  id: Int!
+}
+
+input DeleteOrderInput {
+  id: Int!
+}
+
+input DeletePalletInput {
+  id: Int!
+}
+
+input DeletePalletStockInput {
+  id: Int!
+}
+
+input DeleteProductInput {
+  id: Int!
+}
+
+input DeleteProductMediaInput {
+  id: Int!
+}
+
+input DeleteProductOptionInput {
+  id: Int!
+}
+
+input DeleteProductVariantInput {
+  id: Int!
+}
+
+input DeleteRackInput {
+  id: Int!
+}
+
+input DeleteStoreInput {
+  id: Int!
+}
+
+input DeleteSupplierInput {
+  id: Int!
+}
+
+input DeleteWarehouseInput {
+  id: Int!
+}
+
+input DeleteZoneInput {
+  id: Int!
+}
+
+type FulfillmentLineItem {
+  id: Int
+  orderFulfillmentId: Int
+  orderLineItemId: Int
+  shopifyFulfillmentLineItemId: Int
+  shopifyOrderId: Int
+  quantity: Int
+  createdAt: DateTime
+  updatedAt: DateTime
+  orderFulfillment: OrderFulfillment
+  orderLineItem: OrderLineItem
+}
+
+type FulfillmentOrder {
+  id: Int
+  orderId: Int
+  shopifyFulfillmentOrderId: Int
+  assignedLocationId: Int
+  channelId: Int
+  status: String
+  requestStatus: String
+  supportedActions: JSON
+  destination: JSON
+  deliveryMethod: JSON
+  fulfillAt: DateTime
+  fulfillBy: DateTime
+  merchantRequests: JSON
+  fulfillmentHolds: JSON
+  internationalDuties: JSON
+  orderName: String
+  orderProcessedAt: DateTime
+  createdAt: DateTime
+  updatedAt: DateTime
+  lineItems: [FulfillmentOrderLineItem!]!
+  order: Order
+}
+
+type FulfillmentOrderLineItem {
+  id: Int
+  fulfillmentOrderId: Int
+  orderLineItemId: Int
+  shopifyFulfillmentOrderLineItemId: Int
+  quantity: Int
+  fulfillableQuantity: Int
+  variantId: Int
+  createdAt: DateTime
+  updatedAt: DateTime
+  fulfillmentOrder: FulfillmentOrder
+  orderLineItem: OrderLineItem
+}
+
+type FulfillmentService {
+  id: Int
+  storeId: Int
+  locationId: Int
+  shopifyFulfillmentServiceId: Int
+  name: String
+  handle: String
+  callbackUrl: String
+  active: Boolean
+  trackingSupport: Boolean
+  permitsSkuSharing: Boolean
+  requiresShippingMethod: Boolean
+  fulfillmentOrdersOptIn: Boolean
+  includePendingStock: Boolean
+  inventoryManagement: Boolean
+  email: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  store: Store
+  location: Location
+}
+
+type InventoryItem {
+  id: Int
+  variantId: Int
+  shopifyInventoryItemId: Int
+  sku: String
+  tracked: Boolean
+  requiresShipping: Boolean
+  unitCost: Float
+  countryCodeOfOrigin: String
+  provinceCodeOfOrigin: String
+  harmonizedSystemCode: String
+  countryHarmonizedSystemCodes: JSON
+  measurementWeight: Float
+  measurementUnit: String
+  measurement: JSON
+  trackedEditable: JSON
+  barcode: String
+  multipack: Boolean
+  caseUpc: String
+  legacyResourceId: String
+  duplicateSkuCount: Int
+  inventoryHistoryUrl: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  variant: ProductVariant
+  inventoryLevels: [InventoryLevel!]!
+}
+
+type InventoryLevel {
+  id: Int
+  inventoryItemId: Int
+  locationId: Int
+  shopifyInventoryLevelId: Int
+  shopifyInventoryItemId: Int
+  shopifyLocationId: Int
+  canDeactivate: Boolean
+  deactivationAlert: String
+  quantities: JSON
+  scheduledChanges: JSON
+  legacyResourceId: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  inventoryItem: InventoryItem
+  location: Location
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](https://ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf).
+"""
+scalar JSON @specifiedBy(url: "https://ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf")
+
+type Location {
+  id: Int
+  storeId: Int
+  shopifyLocationId: Int
+  name: String
+  address: JSON
+  addressVerified: Boolean
+  suggestedAddresses: JSON
+  company: String
+  handle: String
+  platform: String
+  fulfillsOnlineOrders: Boolean
+  hasActiveInventory: Boolean
+  isActive: Boolean
+  isFulfillmentService: Boolean
+  shipsInventory: Boolean
+  deactivatable: Boolean
+  activatable: Boolean
+  deletable: Boolean
+  deactivatedAt: DateTime
+  fulfillmentServiceId: Int
+  metafields: JSON
+  legacyResourceId: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  warehouses: [Warehouse!]!
+  store: Store
+}
+
+type Mutation {
+  upsertStore(
+    """Input data for `upsertStore` mutation"""
+    input: UpsertStoreInput!
+  ): Store!
+  deleteStore(
+    """Input data for `deleteStore` mutation"""
+    input: DeleteStoreInput!
+  ): Boolean!
+  upsertWarehouse(
+    """Input data for `upsertWarehouse` mutation"""
+    input: UpsertWarehouseInput!
+  ): Warehouse!
+  deleteWarehouse(
+    """Input data for `deleteWarehouse` mutation"""
+    input: DeleteWarehouseInput!
+  ): Boolean!
+  upsertZone(
+    """Input data for `upsertZone` mutation"""
+    input: UpsertZoneInput!
+  ): Zone!
+  deleteZone(
+    """Input data for `deleteZone` mutation"""
+    input: DeleteZoneInput!
+  ): Boolean!
+  upsertAisle(
+    """Input data for `upsertAisle` mutation"""
+    input: UpsertAisleInput!
+  ): Aisle!
+  deleteAisle(
+    """Input data for `deleteAisle` mutation"""
+    input: DeleteAisleInput!
+  ): Boolean!
+  upsertRack(
+    """Input data for `upsertRack` mutation"""
+    input: UpsertRackInput!
+  ): Rack!
+  deleteRack(
+    """Input data for `deleteRack` mutation"""
+    input: DeleteRackInput!
+  ): Boolean!
+  upsertBatch(
+    """Input data for `upsertBatch` mutation"""
+    input: UpsertBatchInput!
+  ): Batch!
+  deleteBatch(
+    """Input data for `deleteBatch` mutation"""
+    input: DeleteBatchInput!
+  ): Boolean!
+  upsertPallet(
+    """Input data for `upsertPallet` mutation"""
+    input: UpsertPalletInput!
+  ): Pallet!
+  deletePallet(
+    """Input data for `deletePallet` mutation"""
+    input: DeletePalletInput!
+  ): Boolean!
+  upsertOrder(
+    """Input data for `upsertOrder` mutation"""
+    input: UpsertOrderInput!
+  ): Order!
+  deleteOrder(
+    """Input data for `deleteOrder` mutation"""
+    input: DeleteOrderInput!
+  ): Boolean!
+  upsertSupplier(
+    """Input data for `upsertSupplier` mutation"""
+    input: UpsertSupplierInput!
+  ): Supplier!
+  deleteSupplier(
+    """Input data for `deleteSupplier` mutation"""
+    input: DeleteSupplierInput!
+  ): Boolean!
+  upsertChannel(
+    """Input data for `upsertChannel` mutation"""
+    input: UpsertChannelInput!
+  ): Channel!
+  deleteChannel(
+    """Input data for `deleteChannel` mutation"""
+    input: DeleteChannelInput!
+  ): Boolean!
+  upsertLocation(
+    """Input data for `upsertLocation` mutation"""
+    input: UpsertLocationInput!
+  ): Location!
+  deleteLocation(
+    """Input data for `deleteLocation` mutation"""
+    input: DeleteLocationInput!
+  ): Location
+  upsertProduct(
+    """Input data for `upsertProduct` mutation"""
+    input: UpsertProductInput!
+  ): Product!
+  deleteProduct(
+    """Input data for `deleteProduct` mutation"""
+    input: DeleteProductInput!
+  ): Boolean!
+  upsertBin(
+    """Input data for `upsertBin` mutation"""
+    input: UpsertBinInput!
+  ): Bin!
+  deleteBin(
+    """Input data for `deleteBin` mutation"""
+    input: DeleteBinInput!
+  ): Boolean!
+  upsertInventoryItem(
+    """Input data for `upsertInventoryItem` mutation"""
+    input: UpsertInventoryItemInput!
+  ): InventoryItem!
+  deleteInventoryItem(
+    """Input data for `deleteInventoryItem` mutation"""
+    input: DeleteInventoryItemInput!
+  ): Boolean!
+  upsertInventoryLevel(
+    """Input data for `upsertInventoryLevel` mutation"""
+    input: UpsertInventoryLevelInput!
+  ): InventoryLevel!
+  deleteInventoryLevel(
+    """Input data for `deleteInventoryLevel` mutation"""
+    input: DeleteInventoryLevelInput!
+  ): InventoryLevel
+  upsertCustomer(
+    """Input data for `upsertCustomer` mutation"""
+    input: UpsertCustomerInput!
+  ): Customer!
+  deleteCustomer(
+    """Input data for `deleteCustomer` mutation"""
+    input: DeleteCustomerInput!
+  ): Boolean!
+  upsertCarrier(
+    """Input data for `upsertCarrier` mutation"""
+    input: UpsertCarrierInput!
+  ): Carrier!
+  deleteCarrier(
+    """Input data for `deleteCarrier` mutation"""
+    input: DeleteCarrierInput!
+  ): Boolean!
+  upsertBinPosition(
+    """Input data for `upsertBinPosition` mutation"""
+    input: UpsertBinPositionInput!
+  ): BinPosition!
+  deleteBinPosition(
+    """Input data for `deleteBinPosition` mutation"""
+    input: DeleteBinPositionInput!
+  ): Boolean!
+  upsertFulfillmentOrder(
+    """Input data for `upsertFulfillmentOrder` mutation"""
+    input: UpsertFulfillmentOrderInput!
+  ): FulfillmentOrder!
+  deleteFulfillmentOrder(
+    """Input data for `deleteFulfillmentOrder` mutation"""
+    input: DeleteFulfillmentOrderInput!
+  ): Boolean!
+  upsertFulfillmentService(
+    """Input data for `upsertFulfillmentService` mutation"""
+    input: UpsertFulfillmentServiceInput!
+  ): FulfillmentService!
+  deleteFulfillmentService(
+    """Input data for `deleteFulfillmentService` mutation"""
+    input: DeleteFulfillmentServiceInput!
+  ): Boolean!
+  upsertFulfillmentLineItem(
+    """Input data for `upsertFulfillmentLineItem` mutation"""
+    input: UpsertFulfillmentLineItemInput!
+  ): FulfillmentLineItem!
+  deleteFulfillmentLineItem(
+    """Input data for `deleteFulfillmentLineItem` mutation"""
+    input: DeleteFulfillmentLineItemInput!
+  ): Boolean!
+  upsertProductVariant(
+    """Input data for `upsertProductVariant` mutation"""
+    input: UpsertProductVariantInput!
+  ): ProductVariant!
+  deleteProductVariant(
+    """Input data for `deleteProductVariant` mutation"""
+    input: DeleteProductVariantInput!
+  ): Boolean!
+  upsertProductOption(
+    """Input data for `upsertProductOption` mutation"""
+    input: UpsertProductOptionInput!
+  ): ProductOption!
+  deleteProductOption(
+    """Input data for `deleteProductOption` mutation"""
+    input: DeleteProductOptionInput!
+  ): Boolean!
+  upsertProductMedia(
+    """Input data for `upsertProductMedia` mutation"""
+    input: UpsertProductMediaInput!
+  ): ProductMedia!
+  deleteProductMedia(
+    """Input data for `deleteProductMedia` mutation"""
+    input: DeleteProductMediaInput!
+  ): Boolean!
+  upsertPalletStock(
+    """Input data for `upsertPalletStock` mutation"""
+    input: UpsertPalletStockInput!
+  ): PalletStock!
+  deletePalletStock(
+    """Input data for `deletePalletStock` mutation"""
+    input: DeletePalletStockInput!
+  ): Boolean!
+}
+
+type Order {
+  id: Int
+  storeId: Int
+  shopifyOrderId: Int
+  customerId: Int
+  locationId: Int
+  orderNumber: Int
+  name: String
+  email: String
+  phone: String
+  totalPrice: Decimal
+  subtotalPrice: Decimal
+  totalTax: Decimal
+  totalDiscounts: Decimal
+  totalLineItemsPrice: Decimal
+  totalWeight: Decimal
+  currency: String
+  presentmentCurrency: String
+  taxesIncluded: Boolean
+  financialStatus: String
+  fulfillmentStatus: String
+  tags: String
+  note: String
+  noteAttributes: String
+  sourceName: String
+  sourceIdentifier: String
+  sourceUrl: String
+  appId: Int
+  userId: Int
+  deviceId: String
+  browserIp: String
+  landingSite: String
+  referringSite: String
+  customerLocale: String
+  cartToken: String
+  checkoutToken: String
+  confirmed: Boolean
+  test: Boolean
+  processedAt: DateTime
+  closedAt: DateTime
+  cancelledAt: DateTime
+  cancelReason: String
+  paymentGatewayNames: [String!]
+  paymentTerms: String
+  orderStatusUrl: String
+  orderEditUrl: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  lineItems: [OrderLineItem!]!
+  billingAddress: OrderAddress
+  shippingAddress: OrderAddress
+  fulfillments: [OrderFulfillment!]!
+  refunds: [OrderRefund!]!
+  returns: [OrderReturn!]!
+  taxes: [OrderTax!]!
+  discounts: [OrderDiscount!]!
+  shippingLines: [OrderShippingLine!]!
+  customer: Customer
+  store: Store
+}
+
+type OrderAddress {
+  id: Int
+  orderId: Int
+  addressType: String
+  firstName: String
+  lastName: String
+  address1: String
+  address2: String
+  city: String
+  province: String
+  provinceCode: String
+  country: String
+  countryCode: String
+  zip: String
+  phone: String
+  company: String
+  latitude: Float
+  longitude: Float
+  name: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  order: Order
+}
+
+type OrderDiscount {
+  id: Int
+  orderId: Int
+  shopifyDiscountApplicationId: String
+  allocationMethod: String
+  targetSelection: String
+  targetType: String
+  valueType: String
+  code: String
+  amount: Decimal
+  value: Decimal
+  title: String
+  description: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  order: Order
+}
+
+type OrderFulfillment {
+  id: Int
+  orderId: Int
+  shopifyFulfillmentId: Int
+  shopifyOrderId: Int
+  orderFulfillmentId: String
+  origin: String
+  status: String
+  shipmentStatus: String
+  trackingCompany: String
+  trackingNumber: String
+  trackingUrl: String
+  trackingNumbers: [String!]
+  trackingUrls: [String!]
+  shopifyLocationId: Int
+  locationId: Int
+  warehouseId: Int
+  service: String
+  receipt: JSON
+  carrierId: Int
+  createdAt: DateTime
+  updatedAt: DateTime
+  order: Order
+}
+
+type OrderLineItem {
+  id: Int
+  orderId: Int
+  shopifyOrderLineItemId: Int
+  productVariantId: Int
+  quantity: Int
+  price: Decimal
+  totalDiscount: Decimal
+  title: String
+  variantTitle: String
+  sku: String
+  vendor: String
+  productId: Int
+  requiresShipping: Boolean
+  taxable: Boolean
+  giftCard: Boolean
+  fulfillmentService: String
+  grams: Int
+  taxLines: JSON
+  tipPaymentGateway: String
+  tipPaymentMethod: String
+  totalDiscountSet: JSON
+  discountAllocations: JSON
+  duties: JSON
+  adminGraphqlApiId: String
+  fulfillableQuantity: Int
+  fulfillmentStatus: String
+  preTaxPrice: Decimal
+  preTaxPriceSet: JSON
+  priceSet: JSON
+  properties: JSON
+  attributedStaffs: JSON
+  createdAt: DateTime
+  updatedAt: DateTime
+  order: Order
+  productVariant: ProductVariant
+}
+
+type OrderRefund {
+  id: Int
+  orderId: Int
+  shopifyRefundId: Int
+  shopifyOrderId: Int
+  orderRefundId: String
+  amount: Float
+  currency: String
+  reason: String
+  note: String
+  processedAt: DateTime
+  restock: Boolean
+  adminGraphqlApiId: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  order: Order
+}
+
+type OrderReturn {
+  id: Int
+  orderId: Int
+  shopifyReturnId: Int
+  status: String
+  note: String
+  processedAt: DateTime
+  restock: Boolean
+  returnLineItems: JSON
+  createdAt: DateTime
+  updatedAt: DateTime
+  order: Order
+}
+
+type OrderShippingLine {
+  id: Int
+  orderId: Int
+  shopifyShippingLineId: Int
+  title: String
+  price: Decimal
+  code: String
+  source: String
+  carrierIdentifier: String
+  deliveryCategory: String
+  discountedPrice: Decimal
+  phone: String
+  requestedFulfillmentServiceId: Int
+  taxLines: JSON
+  priceSet: JSON
+  discountedPriceSet: JSON
+  createdAt: DateTime
+  updatedAt: DateTime
+  order: Order
+}
+
+type OrderTax {
+  id: Int
+  orderId: Int
+  title: String
+  price: Decimal
+  rate: Decimal
+  priceSet: JSON
+  channelLiable: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+  order: Order
+}
+
+type Pallet {
+  id: Int
+  code: String
+  binPositionId: Int
+  batchId: Int
+  productVariantId: Int
+  purchaseOrderLineItemId: Int
+  weight: Float
+  status: String
+  type: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  stock: PalletStock
+  binPosition: BinPosition
+  batch: Batch
+  productVariant: ProductVariant
+  purchaseOrderLineItem: PurchaseOrderLineItem
+}
+
+type PalletStock {
+  id: Int
+  palletId: Int
+  productVariantId: Int
+  purchaseOrderLineItemId: Int
+  inbounded: Int
+  forecasted: Int
+  reserved: Int
+  allocated: Int
+  available: Int
+  inventoryItemId: Int
+  locationId: Int
+  received: Date
+  counted: Date
+  moved: Date
+  createdAt: DateTime
+  updatedAt: DateTime
+  pallet: Pallet
+  productVariant: ProductVariant
+  purchaseOrderLineItem: PurchaseOrderLineItem
+}
+
+type Product {
+  id: Int
+  storeId: Int
+  shopifyProductId: Int
+  title: String
+  bodyHtml: String
+  vendor: String
+  productType: String
+  handle: String
+  tags: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  variants: [ProductVariant!]!
+  options: [ProductOption!]!
+  media: [ProductMedia!]!
+  store: Store
+}
+
+type ProductMedia {
+  id: Int
+  productId: Int
+  shopifyMediaId: Int
+  mediaType: String
+  src: String
+  position: Int
+  alt: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  product: Product
+}
+
+type ProductOption {
+  id: Int
+  productId: Int
+  shopifyOptionId: Int
+  name: String
+  position: Int
+  values: [String!]
+  createdAt: DateTime
+  updatedAt: DateTime
+  product: Product
+}
+
+type ProductVariant {
+  id: Int
+  productId: Int
+  shopifyVariantId: Int
+  inventoryItemId: Int
+  sku: String
+  barcode: String
+  title: String
+  option1: String
+  option2: String
+  option3: String
+  price: Decimal
+  compareAtPrice: Decimal
+  inventoryQuantity: Int
+  weight: Float
+  weightUnit: String
+  requiresShipping: Boolean
+  taxable: Boolean
+  position: Int
+  imageId: Int
+  availableForSale: Boolean
+  inventoryPolicy: String
+  inventoryManagement: String
+  fulfillmentService: String
+  taxCode: String
+  unitPrice: Decimal
+  unitPriceMeasurement: JSON
+  selectedOptions: JSON
+  metafields: JSON
+  legacyResourceId: Int
+  createdAt: DateTime
+  updatedAt: DateTime
+  product: Product
+}
+
+type PurchaseOrder {
+  id: Int
+  purchaseOrderId: String
+  supplierId: Int
+  warehouseId: Int
+  status: String
+  shipmentStatus: String
+  expectedDeliveryDate: Date
+  deliveryDate: Date
+  trackingNumber: String
+  trackingUrl: String
+  carrier: String
+  notes: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  supplier: Supplier
+  warehouse: Warehouse
+  lineItems: [PurchaseOrderLineItem!]!
+}
+
+type PurchaseOrderLineItem {
+  id: Int
+  purchaseOrderId: Int
+  productVariantId: Int
+  ordered: Int
+  received: Int
+  outstanding: Int
+  status: String
+  firstDeliveryDate: DateTime
+  lastDeliveryDate: DateTime
+  expectedCompletionDate: DateTime
+  notes: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  purchaseOrder: PurchaseOrder
+  productVariant: ProductVariant
+  pallets: [Pallet!]!
+}
+
+type Query {
+  _service: _Service!
+  stores: [Store!]!
+  store(id: Int!): Store
+  warehouses: [Warehouse!]!
+  warehouse(id: Int!): Warehouse
+  zones: [Zone!]!
+  zone(id: Int!): Zone
+  aisles: [Aisle!]!
+  aisle(id: Int!): Aisle
+  racks: [Rack!]!
+  rack(id: Int!): Rack
+  batches: [Batch!]!
+  batch(id: Int!): Batch
+  pallets: [Pallet!]!
+  pallet(id: Int!): Pallet
+  orders: [Order!]!
+  order(id: Int!): Order
+  suppliers: [Supplier!]!
+  supplier(id: Int!): Supplier
+  channels: [Channel!]!
+  channel(id: Int!): Channel
+  locations: [Location!]!
+  location(id: Int!): Location
+  products: [Product!]!
+  product(id: Int!): Product
+  bins: [Bin!]!
+  bin(id: Int!): Bin
+  inventoryItems: [InventoryItem!]!
+  inventoryItem(id: Int!): InventoryItem
+  inventoryLevels: [InventoryLevel!]!
+  inventoryLevel(id: Int!): InventoryLevel
+  customers: [Customer!]!
+  customer(id: Int!): Customer
+  carriers: [Carrier!]!
+  carrier(id: Int!): Carrier
+  binPositions: [BinPosition!]!
+  binPosition(id: Int!): BinPosition
+  fulfillmentOrders: [FulfillmentOrder!]!
+  fulfillmentOrder(id: Int!): FulfillmentOrder
+  fulfillmentServices: [FulfillmentService!]!
+  fulfillmentService(id: Int!): FulfillmentService
+  fulfillmentLineItems: [FulfillmentLineItem!]!
+  fulfillmentLineItem(id: Int!): FulfillmentLineItem
+  productVariants: [ProductVariant!]!
+  productOptions: [ProductOption!]!
+  productMedia: [ProductMedia!]!
+  productMediaByProduct(id: Int!): [ProductMedia!]!
+  palletStocks: [PalletStock!]!
+  healthCheck: String!
+}
+
+type Rack {
+  id: Int
+  aisleId: Int
+  position: Int
+  description: String
+  type: String
+  active: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+  bins: [Bin!]!
+  aisle: Aisle
+}
+
+type ShippingZone {
+  id: Int
+  storeId: Int
+  shopifyZoneId: Int
+  name: String
+  countries: [String!]
+  createdAt: DateTime
+  updatedAt: DateTime
+  store: Store
+}
+
+type Store {
+  id: Int
+  shopifyStoreId: Int
+  accessToken: String
+  name: String
+  domain: String
+  country: String
+  currency: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  orders: [Order!]!
+  customers: [Customer!]!
+  products: [Product!]!
+  carriers: [Carrier!]!
+  channels: [Channel!]!
+  locations: [Location!]!
+  shippingZones: [ShippingZone!]!
+  fulfillmentServices: [FulfillmentService!]!
+}
+
+type Subscription {
+  storeCreated: Store!
+  storeUpdated: Store!
+  storeDeleted: Int!
+  warehouseCreated: Warehouse!
+  warehouseUpdated: Warehouse!
+  warehouseDeleted: Int!
+  zoneCreated: Zone!
+  zoneUpdated: Zone!
+  zoneDeleted: Int!
+  aisleCreated: Aisle!
+  aisleUpdated: Aisle!
+  aisleDeleted: Int!
+  rackCreated: Rack!
+  rackUpdated: Rack!
+  rackDeleted: Int!
+  batchCreated: Batch!
+  batchUpdated: Batch!
+  batchDeleted: Int!
+  palletCreated: Pallet!
+  palletUpdated: Pallet!
+  palletDeleted: Int!
+  orderCreated: Order!
+  orderUpdated: Order!
+  orderDeleted: Int!
+  supplierCreated: Supplier!
+  supplierUpdated: Supplier!
+  supplierDeleted: Int!
+  channelCreated: Channel!
+  channelUpdated: Channel!
+  channelDeleted: Int!
+  locationCreated: Location!
+  locationUpdated: Location!
+  locationDeleted: Int!
+  productCreated: Product!
+  productUpdated: Product!
+  productDeleted: Int!
+  binCreated: Bin!
+  binUpdated: Bin!
+  binDeleted: Int!
+  inventoryItemCreated: InventoryItem!
+  inventoryItemUpdated: InventoryItem!
+  inventoryItemDeleted: Int!
+  inventoryLevelCreated: InventoryLevel!
+  inventoryLevelUpdated: InventoryLevel!
+  inventoryLevelDeleted: Int!
+  customerCreated: Customer!
+  customerUpdated: Customer!
+  customerDeleted: Int!
+  carrierCreated: Carrier!
+  carrierUpdated: Carrier!
+  carrierDeleted: Int!
+  binPositionCreated: BinPosition!
+  binPositionUpdated: BinPosition!
+  binPositionDeleted: Int!
+  fulfillmentOrderCreated: FulfillmentOrder!
+  fulfillmentOrderUpdated: FulfillmentOrder!
+  fulfillmentOrderDeleted: Int!
+  fulfillmentServiceCreated: FulfillmentService!
+  fulfillmentServiceUpdated: FulfillmentService!
+  fulfillmentServiceDeleted: Int!
+  fulfillmentLineItemCreated: FulfillmentLineItem!
+  fulfillmentLineItemUpdated: FulfillmentLineItem!
+  fulfillmentLineItemDeleted: Int!
+  productVariantCreated: ProductVariant!
+  productVariantUpdated: ProductVariant!
+  productVariantDeleted: Int!
+  productOptionCreated: ProductOption!
+  productOptionUpdated: ProductOption!
+  productOptionDeleted: Int!
+  productMediaCreated: ProductMedia!
+  productMediaUpdated: ProductMedia!
+  productMediaDeleted: Int!
+  palletStockCreated: PalletStock!
+  palletStockUpdated: PalletStock!
+  palletStockDeleted: Int!
+}
+
+type Supplier {
+  id: Int
+  code: String
+  name: String
+  email: String
+  phone: String
+  addressLine1: String
+  addressLine2: String
+  city: String
+  province: String
+  postalCode: String
+  country: String
+  status: String
+  notes: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  purchaseOrders: [PurchaseOrder!]!
+}
+
+input UpsertAisleInput {
+  zoneId: Int!
+  name: String!
+  description: String = null
+  type: String = "standard"
+  active: Boolean = true
+}
+
+input UpsertBatchInput {
+  id: Int = null
+  warehouseId: Int = null
+  supplierId: Int = null
+  productVariantId: Int = null
+  lot: String = null
+  manufacturingDate: DateTime = null
+  expiryDate: DateTime = null
+  status: String = null
+  additional: String = null
+}
+
+input UpsertBinInput {
+  rackId: Int!
+  level: String!
+  prefix: String = null
+  accessible: Boolean = true
+  status: String = "available"
+  type: String = "standard"
+  notes: String = null
+}
+
+input UpsertBinPositionInput {
+  binId: Int!
+  position: String!
+  location: String = null
+  status: String = "available"
+  isAvailable: Boolean = true
+}
+
+input UpsertCarrierInput {
+  id: Int = null
+  storeId: Int = null
+  name: String = null
+  code: String = null
+  trackingUrlTemplate: String = null
+  active: Boolean = null
+}
+
+input UpsertChannelInput {
+  storeId: Int!
+  name: String!
+  shopifyChannelId: Int = null
+  channelType: String = null
+  handle: String = null
+  platform: String = null
+  appId: Int = null
+  active: Boolean = true
+}
+
+input UpsertCustomerInput {
+  id: Int = null
+  storeId: Int = null
+  shopifyCustomerId: Int = null
+  firstName: String = null
+  lastName: String = null
+  email: String = null
+  phone: String = null
+  acceptsMarketing: Boolean = null
+  acceptsMarketingUpdatedAt: DateTime = null
+  marketingOptInLevel: String = null
+  taxExempt: Boolean = null
+  taxExemptions: JSON = null
+  state: String = null
+  verifiedEmail: Boolean = null
+  currency: String = null
+  note: String = null
+  tags: String = null
+}
+
+input UpsertFulfillmentLineItemInput {
+  orderFulfillmentId: Int!
+  orderLineItemId: Int!
+  quantity: Int!
+  id: Int = null
+  shopifyFulfillmentLineItemId: Int = null
+  shopifyOrderId: Int = null
+}
+
+input UpsertFulfillmentOrderInput {
+  orderId: Int!
+  shopifyFulfillmentOrderId: Int!
+  id: Int = null
+  assignedLocationId: Int = null
+  channelId: Int = null
+  status: String = null
+  requestStatus: String = null
+  supportedActions: JSON = null
+  destination: JSON = null
+  deliveryMethod: JSON = null
+  fulfillAt: DateTime = null
+  fulfillBy: DateTime = null
+  merchantRequests: JSON = null
+  fulfillmentHolds: JSON = null
+  internationalDuties: JSON = null
+  orderName: String = null
+  orderProcessedAt: DateTime = null
+}
+
+input UpsertFulfillmentServiceInput {
+  storeId: Int!
+  name: String!
+  handle: String!
+  id: Int = null
+  shopifyFulfillmentServiceId: Int = null
+  callbackUrl: String = null
+  active: Boolean = true
+  trackingSupport: Boolean = true
+  permitsSkuSharing: Boolean = true
+  requiresShippingMethod: Boolean = true
+  fulfillmentOrdersOptIn: Boolean = true
+  includePendingStock: Boolean = false
+  inventoryManagement: Boolean = false
+  email: String = null
+  locationId: Int = null
+}
+
+input UpsertInventoryItemInput {
+  variantId: Int!
+  id: Int = null
+  shopifyInventoryItemId: Int = null
+  sku: String = null
+  tracked: Boolean = true
+  requiresShipping: Boolean = null
+  unitCost: Float = null
+  countryCodeOfOrigin: String = null
+  provinceCodeOfOrigin: String = null
+  harmonizedSystemCode: String = null
+  countryHarmonizedSystemCodes: JSON = null
+  measurementWeight: Float = null
+  measurementUnit: String = null
+  measurement: JSON = null
+  trackedEditable: JSON = null
+  barcode: String = null
+  multipack: Boolean = null
+  caseUpc: String = null
+  legacyResourceId: String = null
+}
+
+input UpsertInventoryLevelInput {
+  inventoryItemId: Int!
+  locationId: Int!
+  id: Int = null
+  shopifyInventoryLevelId: Int = null
+  shopifyInventoryItemId: Int = null
+  shopifyLocationId: Int = null
+  canDeactivate: Boolean = null
+  deactivationAlert: String = null
+  quantities: JSON = null
+  scheduledChanges: JSON = null
+  legacyResourceId: String = null
+}
+
+input UpsertLocationInput {
+  id: Int = null
+  storeId: Int = null
+  shopifyLocationId: Int = null
+  name: String = null
+  address: JSON = null
+  addressVerified: Boolean = null
+  suggestedAddresses: JSON = null
+  company: String = null
+  handle: String = null
+  platform: String = null
+  fulfillsOnlineOrders: Boolean = null
+  hasActiveInventory: Boolean = null
+  isActive: Boolean = null
+  isFulfillmentService: Boolean = null
+  shipsInventory: Boolean = null
+  deactivatable: Boolean = null
+  activatable: Boolean = null
+  deletable: Boolean = null
+}
+
+input UpsertOrderInput {
+  storeId: Int!
+  shopifyOrderId: Int!
+  id: Int = null
+  customerId: Int = null
+  locationId: Int = null
+  orderNumber: Int = null
+  name: String = null
+  email: String = null
+  phone: String = null
+  totalPrice: Decimal = null
+  subtotalPrice: Decimal = null
+  totalTax: Decimal = null
+  currency: String = null
+  financialStatus: String = null
+  fulfillmentStatus: String = null
+  tags: String = null
+  note: String = null
+  sourceName: String = null
+  processedAt: DateTime = null
+  totalDiscounts: Decimal = null
+  totalLineItemsPrice: Decimal = null
+  totalWeight: Decimal = null
+  presentmentCurrency: String = null
+  taxesIncluded: Boolean = null
+  sourceIdentifier: String = null
+  sourceUrl: String = null
+  appId: Int = null
+  userId: Int = null
+  deviceId: String = null
+  browserIp: String = null
+  landingSite: String = null
+  referringSite: String = null
+  customerLocale: String = null
+  cartToken: String = null
+  checkoutToken: String = null
+  confirmed: Boolean = null
+  test: Boolean = null
+  closedAt: DateTime = null
+  cancelledAt: DateTime = null
+  cancelReason: String = null
+  paymentGatewayNames: [String!] = null
+  paymentTerms: String = null
+  orderStatusUrl: String = null
+  orderEditUrl: String = null
+}
+
+input UpsertPalletInput {
+  code: String!
+  binPositionId: Int = null
+  batchId: Int = null
+  productVariantId: Int = null
+  purchaseOrderLineItemId: Int = null
+  weight: Float = 0
+  status: String = "inbound"
+  type: String = "euro"
+}
+
+input UpsertPalletStockInput {
+  palletId: Int!
+  productVariantId: Int!
+  purchaseOrderLineItemId: Int!
+  inbounded: Int!
+  forecasted: Int!
+  id: Int = null
+  reserved: Int = 0
+  allocated: Int = 0
+  available: Int = 0
+  inventoryItemId: Int = null
+  locationId: Int = null
+  received: Date = null
+  counted: Date = null
+  moved: Date = null
+}
+
+input UpsertProductInput {
+  storeId: Int!
+  shopifyProductId: Int!
+  title: String = null
+  bodyHtml: String = null
+  vendor: String = null
+  productType: String = null
+  handle: String = null
+  tags: String = null
+}
+
+input UpsertProductMediaInput {
+  productId: Int!
+  shopifyMediaId: Int!
+  id: Int = null
+  mediaType: String = null
+  src: String = null
+  position: Int = null
+  alt: String = null
+}
+
+input UpsertProductOptionInput {
+  productId: Int!
+  shopifyOptionId: Int!
+  id: Int = null
+  name: String = null
+  position: Int = null
+  values: [String!] = null
+}
+
+input UpsertProductVariantInput {
+  productId: Int!
+  id: Int = null
+  shopifyVariantId: Int = null
+  inventoryItemId: Int = null
+  sku: String = null
+  barcode: String = null
+  title: String = null
+  option1: String = null
+  option2: String = null
+  option3: String = null
+  price: Decimal = null
+  compareAtPrice: Decimal = null
+  inventoryQuantity: Int = null
+  weight: Float = null
+  weightUnit: String = null
+  requiresShipping: Boolean = null
+  taxable: Boolean = null
+  position: Int = null
+  imageId: Int = null
+  availableForSale: Boolean = null
+  inventoryPolicy: String = null
+  inventoryManagement: String = null
+  fulfillmentService: String = null
+  taxCode: String = null
+  unitPrice: Decimal = null
+  unitPriceMeasurement: JSON = null
+  selectedOptions: JSON = null
+  metafields: JSON = null
+  legacyResourceId: Int = null
+}
+
+input UpsertRackInput {
+  aisleId: Int!
+  position: Int!
+  description: String = null
+  type: String = "pallet"
+  active: Boolean = true
+}
+
+input UpsertStoreInput {
+  id: Int = null
+  shopifyStoreId: Int = null
+  accessToken: String = null
+  name: String = null
+  domain: String = null
+  country: String = null
+  currency: String = null
+}
+
+input UpsertSupplierInput {
+  id: Int = null
+  code: String = null
+  name: String = null
+  email: String = null
+  phone: String = null
+  addressLine1: String = null
+  addressLine2: String = null
+  city: String = null
+  province: String = null
+  postalCode: String = null
+  country: String = null
+  status: String = null
+  notes: String = null
+}
+
+input UpsertWarehouseInput {
+  name: String!
+  id: Int = null
+  description: String = null
+  locationId: Int = null
+  fulfillmentServiceId: Int = null
+  active: Boolean = true
+}
+
+input UpsertZoneInput {
+  warehouseId: Int!
+  name: String!
+  description: String = null
+  floor: Int = 1
+  type: String = "storage"
+  active: Boolean = true
+}
+
+type Warehouse {
+  id: Int
+  name: String
+  description: String
+  locationId: Int
+  fulfillmentServiceId: Int
+  active: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+  zones: [Zone!]!
+  batches: [Batch!]!
+  purchaseOrders: [PurchaseOrder!]!
+  location: Location
+  fulfillmentService: FulfillmentService
+}
+
+type Zone {
+  id: Int
+  warehouseId: Int
+  name: String
+  description: String
+  floor: Int
+  type: String
+  active: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+  aisles: [Aisle!]!
+  warehouse: Warehouse
+}
+
+scalar _Any
+
+type _Service {
+  sdl: String!
+}
