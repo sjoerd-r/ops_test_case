@@ -2,7 +2,7 @@ from datetime import datetime, UTC
 from sqlmodel import SQLModel, Field, Index
 
 
-class Rack(table=True):
+class Rack(SQLModel, table=True):
     __tablename__ = "racks"
     __table_args__ = (
         Index("idx_racks_aisle", "aisle_id"),

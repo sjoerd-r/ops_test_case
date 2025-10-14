@@ -2,7 +2,7 @@ from datetime import datetime, date, UTC
 from sqlmodel import SQLModel, Field, Index
 
 
-class PalletStock(table=True):
+class PalletStock(SQLModel, table=True):
     __tablename__ = "pallet_stock"
     __table_args__ = (
         Index("idx_pallet_stock_pallet", "pallet_id"),

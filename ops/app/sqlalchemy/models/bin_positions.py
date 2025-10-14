@@ -2,7 +2,7 @@ from datetime import datetime, UTC
 from sqlmodel import SQLModel, Field, Index
 
 
-class BinPosition(table=True):
+class BinPosition(SQLModel, table=True):
     __tablename__ = "bin_positions"
     __table_args__ = (
         Index("idx_bin_positions_bin", "bin_id"),

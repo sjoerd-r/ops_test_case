@@ -2,7 +2,7 @@ from datetime import datetime, UTC
 from sqlmodel import SQLModel, Field, Index
 
 
-class Aisle(table=True):
+class Aisle(SQLModel, table=True):
     __tablename__ = "aisles"
     __table_args__ = (
         Index("idx_aisles_zone", "zone_id"),
