@@ -1,13 +1,8 @@
 from datetime import datetime, UTC
-from sqlmodel import SQLModel, Field, Index
-
+from sqlmodel import SQLModel, Field
 
 class Rack(SQLModel, table=True):
     __tablename__ = "racks"
-    __table_args__ = (
-        Index("idx_racks_aisle", "aisle_id"),
-        Index("idx_racks_position", "aisle_id", "position"),
-    )
 
     id: int | None = Field(default=None, primary_key=True)
     aisle_id: int = Field(foreign_key="aisles.id", nullable=False, index=True)
