@@ -45,3 +45,10 @@ lint.select = ["E", "F", "UP"]
 fix = true
 [tool.ruff.lint.pyupgrade]
 keep-runtime-typing = true
+
+[dependency-groups]
+dev = [
+    "basedpyright>=1.31.7",
+]
+[tool.basedpyright]
+typeCheckingMode = "off"
