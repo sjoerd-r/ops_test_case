@@ -40,9 +40,20 @@ class ZoneService(BaseService):
             return validate_single(Zone, stmt) if stmt else None
 
     async def upsert_zone(self, zone: ZoneInput) -> Zone:
-        pass
+        async with self.session.begin():
+            existing_zone = await self.session.get(zones.Zone, zone.id)
+            if existing_zone:
+                for key, value in zone.dict(
+                    exclude_unset=True, exclude_none=True, exclude={'id'}
+                ).items():
+                    setattr(existing_zone, key, value)
+                return validate_single(Zone, existing_zone)
+            else:
+                new_zone = zones.Zone(**zone.dict())
+                self.session.add(new_zone)
+                return validate_single(Zone, new_zone)
 
-    async def delete_zone(self, zone: ZoneInput) -> bool:
+    async def delete_zone(self, zone: ZoneInput) -> bool: 
         async with self.session.begin():
             result = await self.session.execute(
                 delete(zones.Zone).where(zones.Zone.id == zone.id)

@@ -17,10 +17,8 @@ class Warehouse(BaseModel):
         description="Fulfillment service ID associated with this warehouse",
     )
     active: bool = Field(True, description="Whether the warehouse is active")
-    created_at: datetime | None = Field(None, description="Creation timestamp")
-    updated_at: datetime | None = Field(
-        None, description="Last update timestamp"
-    )
+    created_at: datetime = Field(default_factory=datetime.utcnow, description="Creation timestamp")
+    updated_at: datetime = Field(default_factory=datetime.utcnow, description="Last update timestamp")
 
     @model_validator(mode="before")
     @classmethod

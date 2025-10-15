@@ -19,10 +19,8 @@ class Pallet(BaseModel):
     weight: float | None = Field(0.0, description="Pallet weight")
     status: str = Field("inbound", description="Pallet status")
     type: str | None = Field("euro", description="Pallet type")
-    created_at: datetime | None = Field(None, description="Creation timestamp")
-    updated_at: datetime | None = Field(
-        None, description="Last update timestamp"
-    )
+    created_at: datetime = Field(default_factory=datetime.utcnow, description="Creation timestamp")
+    updated_at: datetime = Field(default_factory=datetime.utcnow, description="Last update timestamp")
 
     @model_validator(mode="before")
     @classmethod
@@ -75,10 +73,8 @@ class PalletStock(BaseModel):
     pallet_id: int = Field(..., description="Pallet ID")
     inventory_item_id: int = Field(..., description="Inventory Item ID")
     quantity: int = Field(0, description="Quantity")
-    created_at: datetime | None = Field(None, description="Creation timestamp")
-    updated_at: datetime | None = Field(
-        None, description="Last update timestamp"
-    )
+    created_at: datetime = Field(default_factory=datetime.utcnow, description="Creation timestamp")
+    updated_at: datetime = Field(default_factory=datetime.utcnow, description="Last update timestamp")
 
     @model_validator(mode="before")
     @classmethod

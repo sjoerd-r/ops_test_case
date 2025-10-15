@@ -15,10 +15,8 @@ class Zone(BaseModel):
     floor: int = Field(1, description="Floor number")
     type: str | None = Field("storage", description="Zone type")
     active: bool = Field(True, description="Whether the zone is active")
-    created_at: datetime | None = Field(None, description="Creation timestamp")
-    updated_at: datetime | None = Field(
-        None, description="Last update timestamp"
-    )
+    created_at: datetime = Field(default_factory=datetime.utcnow, description="Creation timestamp")
+    updated_at: datetime = Field(default_factory=datetime.utcnow, description="Last update timestamp")
 
     @model_validator(mode="before")
     @classmethod
