@@ -31,13 +31,11 @@ class PalletStockQueries:
         info,
         id: int | None = None,
         pallet_id: int | None = None,
-        product_variant_id: int | None = None,
     ) -> Optional["PalletStock"]:
         return await PalletStockService(info.context.session).get_pallet_stock(
             PalletStockFilter(
                 id=id,
                 pallet_id=pallet_id,
-                product_variant_id=product_variant_id,
             )
         )
 
@@ -49,15 +47,12 @@ class PalletStockMutations:
     async def upsert_pallet_stock(
         info,
         pallet_id: int,
-        product_variant_id: int,
-        purchase_order_line_item_id: int,
         inbounded: int,
         forecasted: int,
         id: int | None = None,
         reserved: int | None = 0,
         allocated: int | None = 0,
         available: int | None = 0,
-        inventory_item_id: int | None = None,
         location_id: int | None = None,
         received: date | None = None,
         counted: date | None = None,
@@ -69,14 +64,11 @@ class PalletStockMutations:
             PalletStockInput(
                 id=id,
                 pallet_id=pallet_id,
-                product_variant_id=product_variant_id,
-                purchase_order_line_item_id=purchase_order_line_item_id,
                 inbounded=inbounded,
                 forecasted=forecasted,
                 reserved=reserved,
                 allocated=allocated,
                 available=available,
-                inventory_item_id=inventory_item_id,
                 location_id=location_id,
                 received=received,
                 counted=counted,

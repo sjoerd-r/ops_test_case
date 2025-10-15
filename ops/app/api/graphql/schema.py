@@ -20,6 +20,11 @@ from ops.app.api.graphql.resolvers.pallet import (
     PalletMutations,
     PalletSubscriptions,
 )
+from ops.app.api.graphql.resolvers.pallet_stock import (
+    PalletStockQueries,
+    PalletStockMutations,
+    PalletStockSubscriptions,
+)
 from ops.app.api.graphql.resolvers.rack import (
     RackQueries,
     RackMutations,
@@ -43,6 +48,7 @@ class Query(
     BinQueries,
     BinPositionQueries,
     PalletQueries,
+    PalletStockQueries,
     RackQueries,
     WarehouseQueries,
     ZoneQueries,
@@ -56,6 +62,7 @@ class Mutation(
     BinMutations,
     BinPositionMutations,
     PalletMutations,
+    PalletStockMutations,
     RackMutations,
     WarehouseMutations,
     ZoneMutations,
@@ -69,6 +76,7 @@ class Subscription(
     BinSubscriptions,
     BinPositionSubscriptions,
     PalletSubscriptions,
+    PalletStockSubscriptions,
     RackSubscriptions,
     WarehouseSubscriptions,
     ZoneSubscriptions,
