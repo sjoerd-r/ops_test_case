@@ -14,8 +14,8 @@ class Zone(SQLModel, table=True):
     type: str | None = Field(default="storage")
     active: bool = Field(default=True)
     created_at: datetime = Field(
-        default_factory=lambda: datetime.now(UTC), nullable=False
+        default_factory=datetime.utcnow, nullable=False
     )
     updated_at: datetime = Field(
-        default_factory=lambda: datetime.now(UTC), nullable=False
+        default_factory=datetime.utcnow, nullable=False
     )

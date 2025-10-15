@@ -39,8 +39,14 @@ class Zone(BaseModel):
         )
 
 
-class ZoneInput(Zone):
+class ZoneInput(BaseModel):
     id: int | None = Field(None, description="Zone ID")
+    warehouse_id: int = Field(..., description="Warehouse ID this zone belongs to")
+    name: str = Field(..., description="Zone name")
+    description: str | None = Field(None, description="Zone description")
+    floor: int | None = Field(1, description="Floor number")
+    type: str | None = Field("storage", description="Zone type")
+    active: bool | None = Field(True, description="Whether the zone is active")
 
 
 class ZoneFilter(BaseModel):
