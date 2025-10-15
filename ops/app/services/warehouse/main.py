@@ -1,5 +1,6 @@
 import logging
 from typing import final
+from datetime import datetime
 from sqlmodel import select, SQLModel
 from sqlalchemy import delete
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -48,7 +49,27 @@ class WarehouseService(BaseService):
             return validate_single(Warehouse, stmt) if stmt else None
 
     async def upsert_warehouse(self, warehouse: WarehouseInput) -> Warehouse:
-        pass
+        async with self.session.begin():
+            if warehouse.id is not None:
+                existing_warehouse = await self.session.get(warehouses.Warehouse, warehouse.id)
+            else:
+                existing_warehouse = None
+            
+            if existing_warehouse:
+                for key, value in warehouse.model_dump(
+                    exclude_unset=True, exclude_none=True, exclude={'id'}
+                ).items():
+                    setattr(existing_warehouse, key, value)
+                existing_warehouse.updated_at = datetime.utcnow()
+                await self.session.flush()
+                await self.session.refresh(existing_warehouse)
+                return validate_single(Warehouse, existing_warehouse)
+            else:
+                new_warehouse = warehouses.Warehouse(**warehouse.model_dump())
+                self.session.add(new_warehouse)
+                await self.session.flush()
+                await self.session.refresh(new_warehouse)
+                return validate_single(Warehouse, new_warehouse)
 
     async def delete_warehouse(self, warehouse: WarehouseInput) -> bool:
         async with self.session.begin():
