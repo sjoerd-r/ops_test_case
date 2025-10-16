@@ -1,0 +1,70 @@
+
+# Pallet is inbound
+mutation {
+  upsertPallet(input: {
+    code: "PAL-0001"
+    status: "inbound"
+    weight: 150.0
+    type: "euro"
+  }) {
+    id
+    code
+    status
+  }
+}
+
+
+# Pallet is received & stock registered
+mutation {
+  upsertPallet(input: {
+    code: "PAL-0001"
+    status: "received"
+  }) {
+    id
+    code
+    status
+  }
+}
+
+mutation {
+  upsertPalletStock(input: {
+    palletId: 1
+    inbounded: 100
+    forecasted: 100
+    available: 100
+    received: "2025-10-15"
+  }) {
+    id
+    inbounded
+    available
+  }
+}
+
+# Pallet is saved in a bin
+mutation {
+  upsertPallet(input: {
+    code: "PAL-0001"
+    status: "stored"
+    binPositionId: 1  # Opgeslagen in vak 1
+  }) {
+    id
+    code
+    status
+    binPositionId
+  }
+}
+
+# order komt binnen
+mutation {
+  upsertPalletStock(input: {
+    palletId: 1
+    inbounded: 100
+    forecasted: 100
+    reserved: 20      # 20 stuks gereserveerd
+    available: 80     # Nog 80 beschikbaar --> computed fields maken
+  }) {
+    id
+    reserved
+    available
+  }
+}
