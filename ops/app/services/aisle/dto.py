@@ -12,10 +12,8 @@ class Aisle(BaseModel):
     description: str | None = Field(None, description="Aisle description")
     type: str | None = Field("storage", description="Aisle type")
     active: bool = Field(True, description="Whether the aisle is active")
-    created_at: datetime | None = Field(None, description="Creation timestamp")
-    updated_at: datetime | None = Field(
-        None, description="Last update timestamp"
-    )
+    created_at: datetime = Field(default_factory=datetime.utcnow, description="Creation timestamp")
+    updated_at: datetime = Field(default_factory=datetime.utcnow, description="Last update timestamp")
 
     @model_validator(mode="before")
     @classmethod

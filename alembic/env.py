@@ -7,7 +7,16 @@ from alembic import context
 
 from sqlmodel import SQLModel
 
-from ops.app.sqlalchemy.models import *
+from ops.app.sqlalchemy.models import (
+    aisles,
+    bin_positions,
+    bins,
+    pallet_stock,
+    pallets,
+    racks,
+    warehouses,
+    zones,
+)
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

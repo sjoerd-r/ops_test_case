@@ -14,10 +14,8 @@ class Bin(BaseModel):
     status: str = Field("available", description="Bin status")
     type: str | None = Field("standard", description="Bin type")
     notes: str | None = Field(None, description="Bin notes")
-    created_at: datetime | None = Field(None, description="Creation timestamp")
-    updated_at: datetime | None = Field(
-        None, description="Last update timestamp"
-    )
+    created_at: datetime = Field(default_factory=datetime.utcnow, description="Creation timestamp")
+    updated_at: datetime = Field(default_factory=datetime.utcnow, description="Last update timestamp")
 
     @model_validator(mode="before")
     @classmethod
@@ -63,10 +61,8 @@ class BinPosition(BaseModel):
         ..., description="Position location (e.g., '1-AB-009')"
     )
     status: str = Field("available", description="Position status")
-    created_at: datetime | None = Field(None, description="Creation timestamp")
-    updated_at: datetime | None = Field(
-        None, description="Last update timestamp"
-    )
+    created_at: datetime = Field(default_factory=datetime.utcnow, description="Creation timestamp")
+    updated_at: datetime = Field(default_factory=datetime.utcnow, description="Last update timestamp")
 
     @model_validator(mode="before")
     @classmethod

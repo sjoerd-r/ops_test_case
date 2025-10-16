@@ -1,5 +1,5 @@
 from typing import Any
-from datetime import datetime
+from datetime import datetime, date
 from pydantic import BaseModel, Field, model_validator
 
 
@@ -19,10 +19,8 @@ class Pallet(BaseModel):
     weight: float | None = Field(0.0, description="Pallet weight")
     status: str = Field("inbound", description="Pallet status")
     type: str | None = Field("euro", description="Pallet type")
-    created_at: datetime | None = Field(None, description="Creation timestamp")
-    updated_at: datetime | None = Field(
-        None, description="Last update timestamp"
-    )
+    created_at: datetime = Field(default_factory=datetime.utcnow, description="Creation timestamp")
+    updated_at: datetime = Field(default_factory=datetime.utcnow, description="Last update timestamp")
 
     @model_validator(mode="before")
     @classmethod
@@ -73,41 +71,33 @@ class PalletStock(BaseModel):
 
     id: int | None = Field(None, description="Pallet Stock ID")
     pallet_id: int = Field(..., description="Pallet ID")
-    inventory_item_id: int = Field(..., description="Inventory Item ID")
-    quantity: int = Field(0, description="Quantity")
-    created_at: datetime | None = Field(None, description="Creation timestamp")
-    updated_at: datetime | None = Field(
-        None, description="Last update timestamp"
-    )
+    inbounded: int = Field(..., description="Inbounded quantity")
+    forecasted: int = Field(..., description="Forecasted quantity")
+    reserved: int = Field(default=0, description="Reserved quantity")
+    allocated: int = Field(default=0, description="Allocated quantity")
+    available: int = Field(default=0, description="Available quantity")
+    location_id: int | None = Field(None, description="Location ID (bin position)")
+    received: date | None = Field(None, description="Received date")
+    counted: date | None = Field(None, description="Counted date")
+    moved: date | None = Field(None, description="Moved date")
+    created_at: datetime = Field(default_factory=datetime.utcnow, description="Creation timestamp")
+    updated_at: datetime = Field(default_factory=datetime.utcnow, description="Last update timestamp")
 
     @model_validator(mode="before")
     @classmethod
     def transform_shopify_fields(cls, data: dict[str, Any]) -> dict[str, Any]:
         return data
 
-    @classmethod
-    def from_shopify(
-        cls, data: dict[str, Any], pallet_id: int, inventory_item_id: int
-    ) -> "PalletStock":
-        return cls.model_validate(
-            {
-                "pallet_id": pallet_id,
-                "inventory_item_id": inventory_item_id,
-                "quantity": data.get("quantity", 0),
-            }
-        )
-
 
 class PalletStockInput(PalletStock):
-    pass
+    pallet_id: int | None = Field(None, description="Pallet ID")
+    inbounded: int | None = Field(None, description="Inbounded quantity")
+    forecasted: int | None = Field(None, description="Forecasted quantity")
 
 
 class PalletStockFilter(BaseModel):
     id: int | None = Field(None, description="Pallet Stock ID to filter by")
     pallet_id: int | None = Field(None, description="Pallet ID to filter by")
-    inventory_item_id: int | None = Field(
-        None, description="Inventory Item ID to filter by"
-    )
 
 
 class PalletRelated(BaseModel):
@@ -115,17 +105,3 @@ class PalletRelated(BaseModel):
         default_factory=list, description="Related pallet stocks"
     )
 
-    @classmethod
-    def from_shopify(
-        cls, data: dict[str, Any], pallet_id: int
-    ) -> "PalletRelated":
-        stocks = []
-        for stock_data in data.get("stocks", []):
-            stock = PalletStockInput.from_shopify(
-                stock_data,
-                pallet_id=pallet_id,
-                inventory_item_id=stock_data.get("inventory_item_id"),
-            )
-            stocks.append(stock)
-
-        return cls(stocks=stocks)

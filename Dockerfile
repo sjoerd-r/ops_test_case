@@ -13,15 +13,13 @@ RUN apt-get update && apt-get install -y \
 
 RUN pip install uv
 
-COPY pyproject.toml ./
-
-RUN uv venv .venv && \
-    . .venv/bin/activate && \
-    uv pip install -e .
-
 COPY . .
 
+RUN uv venv /opt/venv && \
+    . /opt/venv/bin/activate && \
+    uv pip install -e .
+
 ENV PYTHONPATH=/app
-ENV PATH="/app/.venv/bin:$PATH"
+ENV PATH="/opt/venv/bin:$PATH"
 
 CMD ["uvicorn", "ops.app.main:app", "--host", "0.0.0.0", "--port", "8000"]

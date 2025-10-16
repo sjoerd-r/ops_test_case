@@ -13,3 +13,6 @@ Thumbs.db
 # Docker
 *.db
 docker-compose.override.yml
+
+#egg-info
+ops.egg-info
